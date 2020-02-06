@@ -1,0 +1,6 @@
+---
+# tasks file for java
+- name: Installing Java
+  become: yes
+  yum:
+    name: java-{{java_version}}-openjdk.x86_64

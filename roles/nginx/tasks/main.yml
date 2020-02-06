@@ -1,0 +1,48 @@
+---
+# tasks file for nginx
+- name: Add repository
+  yum:
+    name: epel-release
+    state: present
+    disable_gpg_check: yes
+  become: yes
+
+- name: install nginx
+  yum:
+    name: nginx
+    state: present
+    disable_gpg_check: yes
+  become: yes
+
+- name: stopping nginx
+  service:
+    name: nginx
+    state: stopped
+  become: yes
+
+- name: Copy tomcat.conf
+  copy:
+    src: templates/tomcat.conf
+    dest: /etc/nginx/conf.d/tomcat.conf
+    owner: root
+    group: root
+  become: yes
+
+- name: Copy nginx.conf
+  copy:
+    src: templates/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+  become: yes
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  shell : setsebool -P httpd_can_network_connect on
+  become: yes
+
+- name: starting nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes

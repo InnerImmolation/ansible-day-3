@@ -1,0 +1,1 @@
+vm1 ansible_ssh_host=10.19.10.35  ansible_connection=ssh ansible_user=vagrant

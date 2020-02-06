@@ -1,0 +1,59 @@
+---
+# tasks file for tomcat
+- name: Add the user 'tomcat'
+  become: yes
+  user:
+    name: tomcat
+    comment: tomcat user
+
+- name: Copy systemd unit
+  become: yes
+  copy:
+    src: templates/tomcat.service
+    dest: /etc/systemd/system/tomcat.service
+    owner: root
+    group: root
+
+- name: Creates directory
+  become: yes
+  file:
+    path: /opt/tomcat
+    state: directory
+
+- name: Creates working directory
+  become: yes
+  file:
+    path: /var/tomcat
+    state: directory
+    owner: tomcat
+    group: tomcat
+
+- name: Downloading and unarchive tomcat
+  become: yes
+  unarchive:
+    src: http://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-8/v8.5.50/bin/apache-tomcat-8.5.50.tar.gz
+    dest: /opt/tomcat
+    remote_src: yes
+    owner: tomcat
+    group: tomcat
+
+- name: Extract
+  become: yes
+  unarchive:
+    src: /opt/tomcat/apache-tomcat-{{tomcat_version}}/bin/commons-daemon-native.tar.gz
+    dest: /opt/tomcat/apache-tomcat-{{tomcat_version}}/bin/
+    remote_src: yes
+    owner: tomcat
+    group: tomcat
+
+- name: Installing Tomcat
+  become: yes
+  shell: |
+    systemctl daemon-reload
+
+- name: starting tomcat
+  service:
+    name: tomcat
+    state: started
+    enabled: yes
+  become: yes

@@ -1,0 +1,3 @@
+---
+# vars file for tomcat
+tomcat_version: 8.5.50

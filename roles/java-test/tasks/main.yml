@@ -1,0 +1,9 @@
+---
+# tasks file for java-test
+- name: Checking Java
+  shell: |
+    java -version
+  register: installed_java_version
+
+- debug:
+    msg: "Java Version: {{ ''.join(installed_java_version.stderr).replace('\n', ' ') }}"

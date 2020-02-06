@@ -1,0 +1,10 @@
+---
+# tasks file for tomcat-test
+- name: Checking Tomcat
+  shell: |
+    systemctl status nginx | grep 'Active'
+  register: tomcat_status
+  become: yes
+
+- debug:
+    msg: "Tomcat Status: {{ ''.join(tomcat_status.stdout).replace('\n', ' ') }}"

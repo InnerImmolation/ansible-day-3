@@ -1,0 +1,36 @@
+- hosts: localhost
+  vars:
+    state: started
+
+  tasks:
+  - name: Echo status
+    debug:
+      msg: "State {{state}}"
+
+  - name: VM deploy
+    vagrant_vm_deploy:
+      path: 'Vagrantfile'
+      state: "{{state}}"
+    register: output
+
+  - name: Checking outup
+    debug:
+      msg: "{{output}}"
+
+  - add_host:
+      name: vm1
+      ansible_host: '{{output.ip}}'
+      ansible_port: '{{output.port}}'
+      ansible_user: '{{output.user}}'
+      ansible_connection: 'ssh'
+      ansible_ssh_private_key_file: '{{output.key}}'
+    when: output.status == "running"
+
+- name: Install java, nginx, tomcat
+  hosts: vm1
+  roles:
+    - java
+    - tomcat
+    - nginx
+
+

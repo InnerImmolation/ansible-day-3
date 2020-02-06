@@ -1,0 +1,11 @@
+---
+# tasks file for nginx-test
+
+- name: Checking Nginx
+  shell: |
+    systemctl status nginx | grep 'Active'
+  register: nginx_status
+  become: yes
+
+- debug:
+    msg: "Nginx Status: {{ ''.join(nginx_status.stdout).replace('\n', ' ') }}"
